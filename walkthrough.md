@@ -208,4 +208,37 @@ def load_command_class(app_name, name):
 At this point, presumably `runserver.py` is invoked?
 https://github.com/django/django/blob/master/django/core/management/commands/runserver.py
 
+Look at `url` next:
+https://github.com/django/django/blob/master/django/conf/urls/__init__.py#L12-L13
 
+```python
+def url(regex, view, kwargs=None, name=None):
+    return re_path(regex, view, kwargs, name)
+```
+
+`re_path` and `_path`
+https://github.com/django/django/blob/4a461d49c775331ed52418f007974d61be1e06b9/django/urls/conf.py#L57-L77
+
+```python
+def _path(route, view, kwargs=None, name=None, Pattern=None):
+    if isinstance(view, (list, tuple)):
+        # For include(...) processing.
+        pattern = Pattern(route, is_endpoint=False)
+        urlconf_module, app_name, namespace = view
+        return URLResolver(
+            pattern,
+            urlconf_module,
+            kwargs,
+            app_name=app_name,
+            namespace=namespace,
+        )
+    elif callable(view):
+        pattern = Pattern(route, name=name, is_endpoint=True)
+        return URLPattern(pattern, view, kwargs, name)
+    else:
+        raise TypeError('view must be a callable or a list/tuple in the case of include().')
+
+
+path = partial(_path, Pattern=RoutePattern)
+re_path = partial(_path, Pattern=RegexPattern)
+```
