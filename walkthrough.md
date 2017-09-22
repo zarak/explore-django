@@ -208,8 +208,9 @@ def load_command_class(app_name, name):
 At this point, presumably `runserver.py` is invoked?
 https://github.com/django/django/blob/master/django/core/management/commands/runserver.py
 
-Look at `url` next:
-https://github.com/django/django/blob/master/django/conf/urls/__init__.py#L12-L13
+# How does `url` map a regex expression to the `index` model?
+Let's look at [`url`](https://github.com/django/django/blob/master/django/conf/urls/__init__.py#L12-L13) next.
+
 
 ```python
 def url(regex, view, kwargs=None, name=None):
