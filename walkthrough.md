@@ -1,6 +1,7 @@
 # minimal.py setup
 
-Necessary minimal Django modules
+The four main top level files that are used are `settings`, `url`,
+`execute_from_command_line` and `HttpResponse`.
 ```python
 import sys
 
@@ -11,12 +12,30 @@ from django.http import HttpResponse
 ```
 
 Settings file (TODO: see how `.configure` call on settings works)
+User defined settings are created. Only three values are set. For comparison,
+the Django default settings template can be seen [here](https://github.com/django/django/blob/master/django/conf/project_template/project_name/settings.py-tpl).
 ```python
 settings.configure(
     DEBUG=True,
     SECRET_KEY='A-random-secret-key!',
     ROOT_URLCONF=sys.modules[__name__],
 )
+```
+
+Function definition for `.configure()`
+```python
+def configure(self, default_settings=global_settings, **options):
+    """
+    Called to manually configure the settings. The 'default_settings'
+    parameter sets where to retrieve any unspecified values from (its
+    argument must support attribute access (__getattr__)).
+    """
+    if self._wrapped is not empty:
+        raise RuntimeError('Settings already configured.')
+    holder = UserSettingsHolder(default_settings)
+    for name, value in options.items():
+        setattr(holder, name, value)
+    self._wrapped = holder
 ```
 
 This would normally be in `views.py`, input a request and output a response
