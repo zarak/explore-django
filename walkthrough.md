@@ -1,6 +1,6 @@
 # minimal.py setup
 
-The four main top level files that are used are `settings`, `url`,
+The [four main top level files](https://github.com/syntarsus/minimal-django/blob/master/minimal.py#L1-L6) that are used are `settings`, `url`,
 `execute_from_command_line` and `HttpResponse`.
 ```python
 import sys
@@ -12,7 +12,7 @@ from django.http import HttpResponse
 ```
 
 Settings file (TODO: see how `.configure` call on settings works)
-User defined settings are created. Only three values are set. For comparison,
+[User defined settings](https://github.com/syntarsus/minimal-django/blob/65458398b2538a59bb0b4287ff1e10bb8473ea43/minimal.py#L8-L12) are created. Only three values are set. For comparison,
 the Django default settings template can be seen [here](https://github.com/django/django/blob/master/django/conf/project_template/project_name/settings.py-tpl).
 ```python
 settings.configure(
@@ -22,7 +22,7 @@ settings.configure(
 )
 ```
 
-Function definition for `.configure()`
+[Function definition](https://github.com/django/django/blob/master/django/conf/__init__.py#L77-L88) for `.configure()`
 ```python
 def configure(self, default_settings=global_settings, **options):
     """
@@ -67,7 +67,7 @@ The `runserver` command is stored in `sys.argv[2]`
 execute_from_command_line(sys.argv)
 ```
 
-Function definition for `execute_from_command_line()`
+[Function definition](https://github.com/django/django/blob/master/django/core/management/__init__.py#L368-L371) for `execute_from_command_line()`
 ```python
 def execute_from_command_line(argv=None):
     """Run a ManagementUtility."""
@@ -75,7 +75,7 @@ def execute_from_command_line(argv=None):
     utility.execute()
 ```
 
-Function definition for `execute()`
+[Function definition](https://github.com/django/django/blob/master/django/core/management/__init__.py#L293-L365) for `execute()`
 ```python
 def execute(self):
     """
@@ -88,7 +88,6 @@ def execute(self):
 ```python
 settings.INSTALLED_APPS
 ```
-# TBC
 
 
 Showing the part of `execute` relevant to the `runserver` subcommand
@@ -118,3 +117,6 @@ if settings.configured:
                 self.argv.remove(_arg)
 
 ```
+
+`fetch_command`
+
