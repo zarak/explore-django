@@ -118,5 +118,94 @@ if settings.configured:
 
 ```
 
-`fetch_command`
+[Function definition](https://github.com/django/django/blob/4a461d49c775331ed52418f007974d61be1e06b9/django/core/management/__init__.py#L188-L217) of `fetch_command`
+```python
+def fetch_command(self, subcommand):
+    """
+    Try to fetch the given subcommand, printing a message with the
+    appropriate command called from the command line (usually
+    "django-admin" or "manage.py") if it can't be found.
+    """
+    # Get commands outside of try block to prevent swallowing exceptions
+    commands = get_commands()
+    try:
+        app_name = commands[subcommand]
+    except KeyError:
+        if os.environ.get('DJANGO_SETTINGS_MODULE'):
+            # If `subcommand` is missing due to misconfigured settings, the
+            # following line will retrigger an ImproperlyConfigured exception
+            # (get_commands() swallows the original one) so the user is
+            # informed about it.
+            settings.INSTALLED_APPS
+        else:
+            sys.stderr.write("No Django settings specified.\n")
+        sys.stderr.write(
+            "Unknown command: %r\nType '%s help' for usage.\n"
+            % (subcommand, self.prog_name)
+        )
+        sys.exit(1)
+    if isinstance(app_name, BaseCommand):
+        # If the command is already loaded, use it directly.
+        klass = app_name
+    else:
+        klass = load_command_class(app_name, subcommand)
+    return klass
+```
+
+[Function definition](https://github.com/django/django/blob/4a461d49c775331ed52418f007974d61be1e06b9/django/core/management/__init__.py#L40-L72) for `get_commands()`. The docstring for this function is very helpful for understanding what kinds of commands might be available.
+
+```python
+@functools.lru_cache(maxsize=None)
+def get_commands():
+    """
+    Return a dictionary mapping command names to their callback applications.
+
+    Look for a management.commands package in django.core, and in each
+    installed application -- if a commands package exists, register all
+    commands in that package.
+
+    Core commands are always included. If a settings module has been
+    specified, also include user-defined commands.
+
+    The dictionary is in the format {command_name: app_name}. Key-value
+    pairs from this dictionary can then be used in calls to
+    load_command_class(app_name, command_name)
+
+    If a specific version of a command must be loaded (e.g., with the
+    startapp command), the instantiated module can be placed in the
+    dictionary in place of the application name.
+
+    The dictionary is cached on the first call and reused on subsequent
+    calls.
+    """
+    commands = {name: 'django.core' for name in find_commands(__path__[0])}
+
+
+    if not settings.configured:
+        return commands
+
+
+    for app_config in reversed(list(apps.get_app_configs())):
+        path = os.path.join(app_config.path, 'management')
+        commands.update({name: app_config.name for name in find_commands(path)})
+
+
+    return commands
+```
+
+[Function definition](https://github.com/django/django/blob/4a461d49c775331ed52418f007974d61be1e06b9/django/core/management/__init__.py#L30-L37) for `load_command_class()`
+```python
+def load_command_class(app_name, name):
+    """
+    Given a command name and an application name, return the Command
+    class instance. Allow all errors raised by the import process
+    (ImportError, AttributeError) to propagate.
+    """
+    module = import_module('%s.management.commands.%s' % (app_name, name))
+    return module.Command()
+```
+
+At this point, presumably `runserver.py` is invoked?
+https://github.com/django/django/blob/master/django/core/management/commands/runserver.py
+
 
