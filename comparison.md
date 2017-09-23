@@ -77,4 +77,34 @@ setup, this is set to have the value `'{{ project_name }}.urls'`. In
 `urls` module. This instructs Django to look here for the `urls` list, and
 indeed, we see the `urlpatterns` list contained within the file.
 
+Next, we note the following snippet:
+```python
+if __name__ == '__main__':
+    execute_from_command_line(sys.argv)
+```
 
+This allows `minimal.py` to behave like `manage.py` in regular Django, which is
+where the same `execute_from_command_line()` function is called.
+
+The default django setup creates a `views.py` file which contains the following
+code upon creating an app with `manage.py startapp`:
+
+```python
+from django.shortcuts import render
+from django import HttpResponse
+
+# Create your views here.
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+```
+
+I believe `render` uses Django's default templating engine. There is also the
+option to use Jinja2. In a minimal setup, one can simply use `HttpResponse`
+as the response object to display on a web-page.
+
+Django uses an ORM by default, but in a minimal setup one can use `SQLAlchemy`
+or perhaps even raw SQL queries to interact with a database.
+
+Next steps:
+Add a database record in sqlite and use SQLAlchemy to access the information
+and display it via a view.
