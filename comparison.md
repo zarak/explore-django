@@ -77,6 +77,13 @@ setup, this is set to have the value `'{{ project_name }}.urls'`. In
 `urls` module. This instructs Django to look here for the `urls` list, and
 indeed, we see the `urlpatterns` list contained within the file.
 
+The `urlpatterns` list contains a pairs or strings and callables. The `url`
+method maps the string to a callable, in this case the `index` function in the
+file. A url is pattern matched using regular expressions. The caret symbol `^`
+denotes the beginning of the input, and the `$` symbol denotes the end.
+Therefore, the pattern `^$` matches an empty string. So if no url is entered,
+the `index` view is called by the `url` function in the `urlpatterns` list.
+
 Next, we note the following snippet:
 ```python
 if __name__ == '__main__':
