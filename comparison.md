@@ -115,3 +115,34 @@ or perhaps even raw SQL queries to interact with a database.
 Next steps:
 Add a database record in sqlite and use SQLAlchemy to access the information
 and display it via a view.
+
+Running the command `python minimal.py migrate` yields the following error:
+
+```
+raise ImproperlyConfigured("settings.DATABASES is improperly configured. "
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+```
+
+This is because a database engine has not been configured in the settings.
+
+We use a sqlite3 settings:
+
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+```
+
+We now get the following message when we run the migrate command:
+
+```
+Operations to perform:
+  Apply all migrations: (none)
+Running migrations:
+  No migrations to apply.
+```
+
+
