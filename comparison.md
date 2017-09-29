@@ -125,7 +125,7 @@ django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly co
 
 This is because a database engine has not been configured in the settings.
 
-We use a sqlite3 settings:
+We use sqlite3 settings:
 
 ```
 DATABASES = {
@@ -136,13 +136,49 @@ DATABASES = {
 }
 ```
 
-We now get the following message when we run the migrate command:
+Next, we would like to create models and configure Django to handle migrations
+for us.
+
+Create the following directory structure:
+```
+├── db.sqlite3
+├── mynewapp
+│   ├── __init__.py
+│   ├── apps.py
+│   └── models.py
+└── minimal.py
+```
+
+Add the following to the `INSTALLED_APPS` list in `minimal.py`.
+
+```python
+INSTALLED_APPS = ['minimal.apps.MinimalConfig']
+```
+
+Add the following to `apps.py`:
+
+```python
+from django.apps import AppConfig
+
+class MyNewAppConfig(AppConfig):
+    verbose_name = 'My New App'
+    name = "mynewapp"
+```
+
+Finally, create a model in the `models.py` file:
+```python
+from django.db import models
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+```
+
+Now you can migrate the changes to the database with the following commands:
 
 ```
-Operations to perform:
-  Apply all migrations: (none)
-Running migrations:
-  No migrations to apply.
+python manage.py makemigrations
+python manage.py migrate
 ```
 
-
+Next: Use the shell to interact with the API
