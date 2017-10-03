@@ -5,6 +5,5 @@ from .models import Question
 def index(request):
     question_list = Question.objects.all()
     first_question = question_list[0]
-    output = '{} {} {}'.format(first_question.id, first_question.question_text,
-            first_question.pub_date)
+    output = f'{first_question.id} {first_question.question_text} {first_question.pub_date}'
     return HttpResponse(output)
