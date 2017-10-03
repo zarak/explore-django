@@ -12,7 +12,8 @@ if not settings.configured:
     settings.configure(
         DEBUG=True,
         SECRET_KEY='A-random-secret-key!',
-        ROOT_URLCONF=sys.modules[__name__],
+        # ROOT_URLCONF=sys.modules[__name__],
+        ROOT_URLCONF='urls',
         DATABASES = {
         'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
@@ -25,14 +26,14 @@ if not settings.configured:
 SITE_ID = 1
 
 # How do I import Question here
-def index(request):
-    question_list = Question.objects.all()
-    output = ', '.join([q.question_text for q in question_list])
-    return HttpResponse(output)
+# def index(request):
+    # question_list = Question.objects.all()
+    # output = ', '.join([q.question_text for q in question_list])
+    # return HttpResponse(output)
 
-urlpatterns = [
-    url(r'^$', index),
-]
+# urlpatterns = [
+    # url(r'^$', index),
+# ]
 
 
 if __name__ == '__main__':
